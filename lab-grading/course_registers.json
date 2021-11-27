@@ -1,0 +1,23 @@
+{
+    "SO": {
+        "ID": "TODO",
+        "moodle_ids": "AP5:AP",
+        "sheets": ["CA", "CB", "CC", "CD", "Altii"],
+        "labs": ["", "Q4:Q", "R4:R", "S4:S", "T4:T", "U4:U", "V4:V", "W4:W",
+            "X4:Q", "Y4:Y", "Z4:Z", "AA4:AA", "AB4:AB"]
+    },
+    "IOCLA": {
+        "ID": "TODO",
+        "moodle_ids": "AJ5:AJ",
+        "sheets": ["CA", "CB", "CC", "CD", "Altii"],
+        "labs": ["", "X5:X", "Y5:Y", "Z5:Z", "AA5:AA", "AB5:AB", "AC5:AC",
+            "AD5:AD", "AE5:AE", "AF5:AF", "AG5:AG", "AH5:AH"]
+    },
+    "SD": {
+        "ID": "TODO",
+        "moodle_ids": "D3:D",
+        "sheets": ["catalog"],
+        "labs": ["", "G3:G", "H3:H", "I3:I", "J3:J", "K3:K", "L3:L", "M3:M",
+            "N3:N", "O3:O", "P3:P", "Q3:Q", "R3:R"]
+    }
+}
