@@ -84,7 +84,7 @@ def _get_register_range(service, register, sheet, lab_no):
     """
     ranges = [
         f'{sheet}!{register["moodle_ids"]}',
-        f'{sheet}!{register["labs"][lab_no]}'
+        f'{sheet}!{register["lab_cols"][lab_no]}'
     ]
     grades = service.spreadsheets().values().batchGet(
         spreadsheetId=register['ID'], ranges=ranges).execute()
@@ -101,7 +101,7 @@ def _make_value_range(register, sheet, lab_no, idx, grade):
     """
     Returns one ValueRange object that corresponds to the grade of one student.
     """
-    lab_col = register['labs'][lab_no]
+    lab_col = register['lab_cols'][lab_no]
     pos = lab_col.find(':')
 
     # TODO: [Bug] This assumes actual grades start from a row < 10.
