@@ -18,7 +18,6 @@ from json import load
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # Hard-coded to fit my own attendance list format. Deal with it!
-ATTENDANCE_RANGE = 'Lista de prezenta!D2:E'
 
 
 def _get_args():
@@ -65,13 +64,15 @@ def _login():
     return build('sheets', 'v4', credentials=creds)
 
 
-def _get_attendees(service, attendance_id):
+def _get_attendees(service, attendance_id, lab_no):
     """
     Returns a list of tuples made up of lab attendees' Moodle IDs and their
     grades.
     """
+    attendance_range = f'Prezenta lab {lab_no}!D2:E'
     students_lab = service.spreadsheets().values().get(
-        spreadsheetId=attendance_id, range=ATTENDANCE_RANGE).execute()['values']
+        spreadsheetId=attendance_id, range=attendance_range).execute()['values']
+
     return list(filter(lambda s: s[0] != '#N/A', students_lab))
 
 
@@ -88,9 +89,10 @@ def _get_register_range(service, register, sheet, lab_no):
     grades = service.spreadsheets().values().batchGet(
         spreadsheetId=register['ID'], ranges=ranges).execute()
 
-    both = zip(grades['valueRanges'][0]['values'],
-            grades['valueRanges'][1]
-            .get('values', [[]] * len(grades['valueRanges'][0]['values'])))
+    stud_names = grades['valueRanges'][0]['values']
+    stud_grades = grades['valueRanges'][1].get('values', [])
+    stud_grades += [[]] * (len(stud_names) - len(stud_grades))
+    both = zip(stud_names, stud_grades)
 
     return { k[0]: (v, i) for i, (k, v) in enumerate(both) }
 
@@ -123,7 +125,7 @@ def main(course, attendance_id, lab_no):
     register = load(open('course_registers.json'))[course]
 
     # Read students who participated in the lab.
-    students_lab = _get_attendees(service, attendance_id)
+    students_lab = _get_attendees(service, attendance_id, lab_no)
 
     # The skeleton of the request body.
     body = {
