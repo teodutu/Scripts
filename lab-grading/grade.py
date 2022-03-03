@@ -1,7 +1,8 @@
 """
 Reads students' names from an attendance sheet (Google Sheets) and writes their
-grades to the class register. The ID of this register is specified in the
-credentials.json file
+grades to the class register. Can also write the acronym of the TA to the class
+register. This option is only to be used once per subgroup. The ID of the class
+register is specified in the credentials.json file.
 
 Requires the following pip3 modules:
 pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
@@ -29,6 +30,8 @@ def _get_args():
         "class register")
     parser.add_argument('-l', '--lab', dest='lab_no', type=int, required=True,
         help='Lab number')
+    parser.add_argument('-t', '--ta', dest='ta', type=str, required=False,
+        help="TA acronym")
     parser.add_argument('-a', '--attendance', dest='attendance', type=str,
         required=True, help="The ID of the attendance list")
     parser.add_argument('-c', '--course', dest='course', type=str, required=True,
@@ -97,29 +100,29 @@ def _get_register_range(service, register, sheet, lab_no):
     return { k[0]: (v, i) for i, (k, v) in enumerate(both) }
 
 
-def _make_value_range(register, sheet, lab_no, idx, grade):
+def _make_value_range(sheet, col, idx, value):
     """
-    Returns one ValueRange object that corresponds to the grade of one student.
+    Returns one ValueRange object that writes the given value at lab_col[idx].
     """
-    lab_col = register['lab_cols'][lab_no]
-    pos = lab_col.find(':')
-
+    # lab_col = register['lab_cols'][lab_no]
+    pos = col.find(':')
     # TODO: [Bug] This assumes actual grades start from a row < 10.
     # This holds true for most registers, though.
-    lab_col_start = int(lab_col[pos-1:pos])
-    lab_col = lab_col[pos+1:]
+    col_start = int(col[pos - 1 : pos])
+    col = col[pos + 1 :]
 
     return {
-        'range': f'{sheet}!{lab_col}{lab_col_start + idx}',
+        'range': f'{sheet}!{col}{col_start + idx}',
         'majorDimension': 'ROWS',
-        'values': [[grade]]
+        'values': [[value]]
     }
 
 
-def main(course, attendance_id, lab_no):
+def main(course, attendance_id, lab_no, ta):
     """
     Retrieves the attendance list and grades all studens who haven't been
-    already graded.
+    already graded. Also assigns the TA to the subgroup if the ta parameter is
+    specified.
     """
     service = _login()
     register = load(open('course_registers.json'))[course]
@@ -140,8 +143,11 @@ def main(course, attendance_id, lab_no):
 
         for stud, grade in students_lab:
             if stud in reg_range and len(reg_range[stud][0]) == 0:
-                body['data'].append(_make_value_range(register, sheet, lab_no,
-                    reg_range[stud][1], grade))
+                body['data'].append(_make_value_range(sheet,
+                    register['lab_cols'][lab_no], reg_range[stud][1], grade))
+                if ta:
+                    body['data'].append(_make_value_range(sheet,
+                        register['ta_col'], reg_range[stud][1], ta))
             elif stud in reg_range:
                 print(f'Error: student "{stud}" has already been graded for lab {lab_no}.')
 
@@ -154,16 +160,17 @@ def main(course, attendance_id, lab_no):
 
     # Print the results.
     updated_cells = response.get('totalUpdatedCells', 0)
-    if updated_cells == len(students_lab):
+    if (not ta and updated_cells == len(students_lab)) \
+            or (ta and updated_cells == 2 * len(students_lab)):
         print(f'All students are graded!')
     elif updated_cells != 0:
-            print(f'Graded {updated_cells} students at cells:')
+            print(f'Modified {updated_cells} cells:')
             for resp in response['responses']:
                 print(resp['updatedRange'])
     else:
-        print('Fucked up completely: no students graded!')
+        print('Fucked up completely: cells modified!')
 
 
 if __name__ == '__main__':
     args = _get_args()
-    main(args.course, args.attendance, args.lab_no)
+    main(args.course, args.attendance, args.lab_no, args.ta)
