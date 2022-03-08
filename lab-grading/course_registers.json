@@ -1,9 +1,9 @@
 {
     "SO": {
         "ID": "TODO",
-        "moodle_ids": "AP5:AP",
-        "sheets": ["CA", "CB", "CC", "CD", "Altii"],
-        "ta_col": "C4:C",
+        "moodle_ids": "AP4:AP",
+        "sheets": ["CA", "CB", "CC", "Altii"],
+        "ta_col": "D4:D",
         "lab_cols": ["", "Q4:Q", "R4:R", "S4:S", "T4:T", "U4:U", "V4:V", "W4:W",
             "X4:Q", "Y4:Y", "Z4:Z", "AA4:AA", "AB4:AB"]
     },
