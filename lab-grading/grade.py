@@ -42,7 +42,7 @@ def _get_args():
 
 def _login():
     """
-    Performs TA login using the tokens.json file, if present.
+    Performs TA login using the token.json file, if present.
     Otherwise, it uses credentials.json.
     """
     creds = None
@@ -140,6 +140,13 @@ def main(course, attendance_id, lab_no, ta):
     # Look for the students in all sheets.
     for sheet in register['sheets']:
         reg_range = _get_register_range(service, register, sheet, lab_no)
+
+        ungraded_students = any(map(lambda s: len(s) < 2, students_lab))
+
+        if ungraded_students:
+            print("You have at least one student that it's not graded in" 
+            "attendance list. Please grade all students before run the script.")
+            return
 
         for stud, grade in students_lab:
             if stud in reg_range and len(reg_range[stud][0]) == 0:
