@@ -17,18 +17,18 @@ pip3 install -r requirements.txt
 
 ### Configuration
 
-In order to run the script, you need to configure some files in `lab-grading`.
+In order to run the script, you need to configure some files in this folder.
 
-Update `course-registers` file and add the ID for every course you want to use.
-You can find the ID in the URL of the spreadsheet. More inforations can be found [here](https://developers.google.com/sheets/api/guides/concepts).
+Update the `course-registers.json` file and replace the strings `"TODO"` with the IDs of the registers from the courses you teach.
+You can find the ID in the URL of the spreadsheet.
+More information can be found [here](https://developers.google.com/sheets/api/guides/concepts).
 
 To interact with Google API you need to generate a OAuth2.0 token.
 To do this for the first time we need to create a project on the Google Cloud platform.
 More information about how you can create a new project [here](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
 
-After you create the project, you must generate an OAuth2.0 token following instructions
-from [here](https://support.google.com/cloud/answer/6158849?hl=en).
-Download the coresponding `json` format for it and add it to a new file named `credentials.json` in `lab-grading` folder.
+After you create the project, you must generate an OAuth2.0 token following instructions from [here](https://support.google.com/cloud/answer/6158849?hl=en).
+Download the corresponding `json` format for it save it in a new file named `credentials.json`, placed in this folder.
 
 ### Running
 
