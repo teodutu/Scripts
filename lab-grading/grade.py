@@ -5,7 +5,7 @@ register. This option is only to be used once per subgroup. The ID of the class
 register is specified in the credentials.json file.
 
 Requires the following pip3 modules:
-pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+pip3 install --upgrade requirements.txt
 """
 
 import argparse
@@ -17,8 +17,9 @@ from google.oauth2.credentials import Credentials
 from json import load
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-
-# Hard-coded to fit my own attendance list format. Deal with it!
+REGISTER_CONFIG_FILE = 'course_registers.json'
+CREDENTIALS_FILE = 'credentials.json'
+TOKEN_FILE = 'token.json'
 
 
 def _get_args():
@@ -32,8 +33,6 @@ def _get_args():
         help='Lab number')
     parser.add_argument('-t', '--ta', dest='ta', type=str, required=False,
         help="TA acronym")
-    parser.add_argument('-a', '--attendance', dest='attendance', type=str,
-        required=True, help="The ID of the attendance list")
     parser.add_argument('-c', '--course', dest='course', type=str, required=True,
         help="The acronym of the course in whose register to write the grades.")
 
@@ -49,19 +48,19 @@ def _login():
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if exists(TOKEN_FILE):
+        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
 
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE,
+                SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.json', 'w') as token:
+        with open(TOKEN_FILE, 'w') as token:
             token.write(creds.to_json())
 
     return build('sheets', 'v4', credentials=creds)
@@ -118,17 +117,17 @@ def _make_value_range(sheet, col, idx, value):
     }
 
 
-def main(course, attendance_id, lab_no, ta):
+def main(course, lab_no, ta):
     """
     Retrieves the attendance list and grades all studens who haven't been
     already graded. Also assigns the TA to the subgroup if the ta parameter is
     specified.
     """
     service = _login()
-    register = load(open('course_registers.json'))[course]
+    register = load(open(REGISTER_CONFIG_FILE))[course]
 
     # Read students who participated in the lab.
-    students_lab = _get_attendees(service, attendance_id, lab_no)
+    students_lab = _get_attendees(service, register['attendance_id'], lab_no)
 
     # The skeleton of the request body.
     body = {
@@ -175,9 +174,9 @@ def main(course, attendance_id, lab_no, ta):
             for resp in response['responses']:
                 print(resp['updatedRange'])
     else:
-        print('Fucked up completely: cells modified!')
+        print('Fucked up completely :( no cells modified!')
 
 
 if __name__ == '__main__':
     args = _get_args()
-    main(args.course, args.attendance, args.lab_no, args.ta)
+    main(args.course, args.lab_no, args.ta)

@@ -1,6 +1,7 @@
 {
     "SO": {
         "ID": "TODO",
+        "attendance_id": "TODO",
         "moodle_ids": "AP4:AP",
         "sheets": ["CA", "CB", "CC", "Altii"],
         "ta_col": "D4:D",
@@ -9,6 +10,7 @@
     },
     "IOCLA": {
         "ID": "TODO",
+        "attendance_id": "TODO",
         "moodle_ids": "AJ5:AJ",
         "sheets": ["CA", "CB", "CC", "CD", "Altii"],
         "ta_col": "E5:E",
@@ -17,6 +19,7 @@
     },
     "SD": {
         "ID": "TODO",
+        "attendance_id": "TODO",
         "moodle_ids": "D3:D",
         "sheets": ["catalog"],
         "ta_col": "C3:C",
