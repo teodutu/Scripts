@@ -30,7 +30,6 @@ Download the corresponding `json` format for it save it in a new file named `cre
 
 - -l/--lab <lab_number>
 - -t/--ta <teaching_assistant>
-- -a/--attendace <attendance_spreadsheet_id> (You can find an example of attendance list [here](https://docs.google.com/spreadsheets/d/1iK4zBbQycSV7KuMorki2ZwyexwCUSH1KgULfml8bCJk/edit?usp=sharing))
 - -c/--course <course_name> (The same from the `course_registers.json`)
 
 ### Example:
@@ -38,5 +37,5 @@ Download the corresponding `json` format for it save it in a new file named `cre
 Put all grades for second lab:
 
 ```
-python3 grade.py -l 2 -a <attendance_spreadsheet_id> -c IOCLA
+python3 grade.py -l 2 -c IOCLA
 ```

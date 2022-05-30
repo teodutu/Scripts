@@ -1,6 +1,6 @@
 {
     "SO": {
-        "ID": "TODO",
+        "register_id": "TODO",
         "attendance_id": "TODO",
         "moodle_ids": "AP4:AP",
         "sheets": ["CA", "CB", "CC", "Altii"],
@@ -9,7 +9,7 @@
             "X4:Q", "Y4:Y", "Z4:Z", "AA4:AA", "AB4:AB"]
     },
     "IOCLA": {
-        "ID": "TODO",
+        "register_id": "TODO",
         "attendance_id": "TODO",
         "moodle_ids": "AJ5:AJ",
         "sheets": ["CA", "CB", "CC", "CD", "Altii"],
@@ -18,7 +18,7 @@
             "AD5:AD", "AE5:AE", "AF5:AF", "AG5:AG", "AH5:AH", "AI5:AI"]
     },
     "SD": {
-        "ID": "TODO",
+        "register_id": "TODO",
         "attendance_id": "TODO",
         "moodle_ids": "D3:D",
         "sheets": ["catalog"],

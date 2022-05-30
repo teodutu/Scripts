@@ -1,7 +1,7 @@
 """
 Reads students' names from an attendance sheet (Google Sheets) and writes their
 grades to the class register. Can also write the acronym of the TA to the class
-register. This option is only to be used once per subgroup. The ID of the class
+register. This option is only to be used once per subgroup. The register_id of the class
 register is specified in the credentials.json file.
 
 Requires the following pip3 modules:
@@ -89,7 +89,7 @@ def _get_register_range(service, register, sheet, lab_no):
         f'{sheet}!{register["lab_cols"][lab_no]}'
     ]
     grades = service.spreadsheets().values().batchGet(
-        spreadsheetId=register['ID'], ranges=ranges).execute()
+        spreadsheetId=register['register_id'], ranges=ranges).execute()
 
     stud_names = grades['valueRanges'][0]['values']
     stud_grades = grades['valueRanges'][1].get('values', [])
@@ -159,10 +159,10 @@ def main(course, lab_no, ta):
 
     # Send the update request.
     request = service.spreadsheets().values().batchUpdate(
-        spreadsheetId=register['ID'], body=body)
+        spreadsheetId=register['register_id'], body=body)
     response = request.execute()
 
-    print(f'Class register: https://docs.google.com/spreadsheets/d/{register["ID"]}')
+    print(f'Class register: https://docs.google.com/spreadsheets/d/{register["register_id"]}')
 
     # Print the results.
     updated_cells = response.get('totalUpdatedCells', 0)
