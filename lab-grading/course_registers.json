@@ -8,6 +8,14 @@
         "lab_cols": ["", "V4:V", "W4:W", "X4:X", "Y4:Y", "Z4:Z", "AA4:AA",
             "AB4:AB", "AC4:AC", "AD4:AD", "AE4:AE", "AF4:AF", "AG4:AG"]
     },
+    "PCLP4": {
+        "register_id": "TODO",
+        "attendance_id": "TODO",
+        "moodle_ids": "AG4:AG",
+        "sheets": ["CA", "CB", "CC", "CD"],
+        "ta_col": "E4:E",
+        "lab_cols": ["", "Q4:Q", "R4:R", "S4:S", "T4:T", "U4:U", "V4:V", "W4:W"]
+    },
     "IOCLA": {
         "register_id": "TODO",
         "attendance_id": "TODO",
